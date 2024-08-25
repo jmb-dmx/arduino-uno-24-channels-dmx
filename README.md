@@ -35,9 +35,9 @@ DMX 512 console with arduino uno, an LCD keypad shield and a dmx512 circuit with
 	• The values ​​are displayed on the screen under “LVL”.
 
 3 - Saving values
-	• SELECT button (●): Press briefly to save the current channel value to EEPROM memory. The screen will display “SAVE” followed by the channel number and its value.
+	• SELECT button (●): Press briefly to save the current channel value to EEPROM memory. The screen will display “SAUVEGARDE” followed by the channel number and its value.
 
 4 - Clearing the memory
 	• To clear saved values, press and hold the SELECT (●) button for 3 seconds.
-	• An animation filling the screen will precede a confirmation request “CLEAR MEMORY?”.
+	• An animation filling the screen will precede a confirmation request “EFFACER MEMOIRE?”.
 	• Press the RIGHT (→) button to confirm deletion. If you do not confirm within 5 seconds, the operation is canceled.
