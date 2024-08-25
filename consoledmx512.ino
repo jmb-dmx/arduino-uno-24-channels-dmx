@@ -10,8 +10,7 @@ unsigned long buttonPressTime = 0;
 bool buttonHeld = false;
 bool eraseMemory = false;
 unsigned long confirmationStartTime = 0;
-const unsigned long confirmationTimeout = 5000; // 5 secondes
-
+const unsigned long confirmationTimeout = 5000;
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 byte right[8] = {
@@ -97,7 +96,7 @@ void loop() {
       buttonPressTime = millis();
       buttonHeld = true;
       eraseMemory = false;
-      confirmationStartTime = millis(); // Start the confirmation timer
+      confirmationStartTime = millis();
     } else if (millis() - buttonPressTime > 3000 && !eraseMemory) {
       eraseMemory = true;
       lcd.clear();
@@ -111,14 +110,13 @@ void loop() {
         }
       }
 
-      // Affichage du message de confirmation
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("EFFACER MEMOIRE?");
       lcd.setCursor(0, 1);
       lcd.print(" *Appuyer sur ");
       lcd.write(byte(2));
-      confirmationStartTime = millis(); // Reset the confirmation timer
+      confirmationStartTime = millis();
 
       while (millis() - confirmationStartTime < confirmationTimeout) {
         int confirm_key = read_LCD_buttons();
@@ -138,7 +136,6 @@ void loop() {
       }
       
       if (millis() - confirmationStartTime >= confirmationTimeout) {
-        // Si la confirmation n'a pas eu lieu dans le temps imparti
         lcd.clear();
         lcd.setCursor(0, 0);
         lcd.print("ANNULATION");
