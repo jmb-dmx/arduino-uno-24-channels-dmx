@@ -1,5 +1,4 @@
-// Arduino Uno 24 Channels DMX 
-// LCD KEYPAD SHIELD
+// Arduino Uno Console 24 canaux dmx 
 
 #include <EEPROM.h>
 #include <LiquidCrystal.h>
