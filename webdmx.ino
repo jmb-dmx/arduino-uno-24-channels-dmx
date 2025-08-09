@@ -31,40 +31,79 @@ String buildHtmlPage() {
     <title>Contrôleur DMX Web</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 15px; }
-        h1 { text-align: center; color: #0097e6; }
-        .controls { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
-        .controls button { padding: 10px 20px; font-size: 1em; color: #fff; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
-        .controls button:hover { background-color: #0056b3; }
-        .controls button.danger { background-color: #dc3545; }
-        .controls button.danger:hover { background-color: #c82333; }
-        .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .slider-group { background-color: #333; border-radius: 8px; padding: 15px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .slider-group .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .slider-group label { font-weight: bold; font-size: 1.1em; }
-        .slider-group .value { font-family: monospace; font-size: 1.2em; color: #0097e6; }
-        .slider-group input[type="range"] { width: 100%; -webkit-appearance: none; appearance: none; height: 10px; background: #555; border-radius: 5px; outline: none; }
-        .slider-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #0097e6; cursor: pointer; border-radius: 50%; }
-        .slider-group input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: #0097e6; cursor: pointer; border-radius: 50%; }
+        h1 { text-align: center; color: #0097e6; margin-top:0; }
+        .top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .top-controls .buttons button { padding: 10px 20px; font-size: 1em; color: #fff; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+        .top-controls .buttons button:hover { background-color: #0056b3; }
+        .top-controls .buttons button.danger { background-color: #dc3545; }
+        .top-controls .buttons button.danger:hover { background-color: #c82333; }
+        .pagination button { padding: 10px 20px; font-size: 1em; border: 1px solid #007bff; background-color: transparent; color: #007bff; cursor: pointer; }
+        .pagination button.active { background-color: #007bff; color: #fff; }
+
+        .page { display: none; }
+        .page.active { display: flex; justify-content: center; gap: 40px; }
+        .fader-block { display: flex; gap: 10px; }
+
+        .slider-group {
+            background-color: #333; border-radius: 8px; padding: 10px;
+            display: flex; flex-direction: column; align-items: center;
+            width: 60px; height: 320px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .slider-group .header {
+            display: flex; flex-direction: column; align-items: center;
+            margin-bottom: 10px; height: 45px;
+        }
+        .slider-group label { font-weight: bold; font-size: 0.9em; }
+        .slider-group .value { font-family: monospace; font-size: 1.2em; color: #0097e6; margin-top: 5px; }
+        input[type="range"].vertical {
+            -webkit-appearance: slider-vertical;
+            writing-mode: bt-lr;
+            width: 20px;
+            height: 200px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h1>Contrôleur DMX Web</h1>
-    <div class="controls">
-        <button onclick="saveValues()">Sauvegarder</button>
-        <button class="danger" onclick="eraseValues()">Tout Effacer</button>
+    <div class="top-controls">
+        <div class="pagination">
+            <button id="btn-page1" class="active" onclick="showPage(1)">Page 1 (1-24)</button>
+            <button id="btn-page2" onclick="showPage(2)">Page 2 (25-48)</button>
+        </div>
+        <div class="buttons">
+            <button onclick="saveValues()">Sauvegarder</button>
+            <button class="danger" onclick="eraseValues()">Tout Effacer</button>
+        </div>
     </div>
-    <div class="container" id="sliders-container">
+
+    <div id="page1" class="page active">
+        <div class="fader-block">
 )rawliteral";
 
   for (int i = 1; i <= DMX_CHANNELS; i++) {
+    // Structure de la page et des blocs
+    if (i == 13) {
+      page += "</div><div class='fader-block'>"; // Fin du bloc 1, début du bloc 2
+    }
+    if (i == 25) {
+      page += "</div></div><div id='page2' class='page'><div class='fader-block'>"; // Fin page 1, début page 2 et bloc 3
+    }
+    if (i == 37) {
+      page += "</div><div class='fader-block'>"; // Fin du bloc 3, début du bloc 4
+    }
+
+    // Génération du fader
     page += "<div class='slider-group'>";
-    page += "<div class='header'><label for='ch" + String(i) + "'>Canal " + String(i) + "</label><span class='value' id='val" + String(i) + "'>0</span></div>";
-    page += "<input type='range' id='ch" + String(i) + "' min='0' max='255' value='0' oninput='updateSlider(" + String(i) + ")'>";
+    page += "<div class='header'><label for='ch" + String(i) + "'>CH " + String(i) + "</label><span class='value' id='val" + String(i) + "'>0</span></div>";
+    page += "<input type='range' class='vertical' id='ch" + String(i) + "' min='0' max='255' value='0' oninput='updateSlider(" + String(i) + ")'>";
     page += "</div>";
   }
 
   page += R"rawliteral(
+        </div>
     </div>
+
     <script>
         var gateway = `ws://${window.location.hostname}:81/`;
         var websocket;
@@ -90,6 +129,16 @@ String buildHtmlPage() {
         function onClose(event) {
             console.log('Connection closed');
             setTimeout(initWebSocket, 2000);
+        }
+
+        function showPage(pageNum) {
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('btn-page1').classList.remove('active');
+            document.getElementById('btn-page2').classList.remove('active');
+
+            document.getElementById('page' + pageNum).style.display = 'flex';
+            document.getElementById('btn-page' + pageNum).classList.add('active');
         }
 
         function onMessage(event) {
